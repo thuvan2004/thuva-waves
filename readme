@@ -1,1 +1,302 @@
+# 🚗 Thuva Waves - Ride Booking Platform
 
+A full-stack MERN ride-booking application inspired by Uber/PickMe, connecting passengers with nearby drivers in real time.
+
+![MERN Stack](https://img.shields.io/badge/Stack-MERN-green)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [User Roles](#user-roles)
+- [Features](#features)
+- [Ride Flow](#ride-flow)
+- [Database Schema](#database-schema)
+- [API Endpoints](#api-endpoints)
+- [Project Structure](#project-structure)
+- [Installation & Setup](#installation--setup)
+- [Environment Variables](#environment-variables)
+- [Security](#security)
+- [Contributing](#contributing)
+
+---
+
+## 🎯 Overview
+
+**Thuva Waves** is a modern, scalable ride-booking platform built on the MERN stack (MongoDB, Express.js, React.js, Node.js). It supports three distinct user roles — Passenger, Driver, and Admin — with real-time ride matching, live GPS tracking, secure payments, and a full admin analytics dashboard.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React.js, Vite, React Router, Axios, Tailwind CSS |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB with Mongoose ODM |
+| **Authentication** | JWT (JSON Web Tokens) |
+| **Maps & Geolocation** | Google Maps API |
+| **Real-time Communication** | Socket.io |
+| **File Upload / Storage** | Cloudinary |
+| **Push Notifications** | Firebase Cloud Messaging (FCM) |
+| **Password Security** | bcrypt |
+
+---
+
+## 👥 User Roles
+
+1. **Passenger** — books rides, tracks drivers, pays, and reviews
+2. **Driver** — accepts rides, navigates, and earns
+3. **Admin** — manages the entire platform
+
+---
+
+## ✨ Features
+
+### 🧍 Passenger
+- Register / Login with JWT authentication
+- Edit profile
+- Book rides with pickup & drop-off location selection
+- Real-time fare estimation
+- Live driver tracking on map
+- Ride history
+- Cancel ride
+- Rate and review drivers
+- View payment history
+
+### 🚘 Driver
+- Register / Login
+- Upload driving license & vehicle details (Cloudinary)
+- Toggle online/offline availability status
+- Accept or reject incoming ride requests
+- Turn-by-turn navigation route (Google Maps)
+- Earnings dashboard
+- Ride history
+- View passenger ratings
+
+### 🛡️ Admin
+- Dashboard analytics (rides, users, revenue trends)
+- Manage users (view, block/unblock)
+- Manage drivers
+- Approve or reject driver registrations
+- Manage all rides
+- Revenue analytics
+- Block/unblock accounts
+
+---
+
+## 🔄 Ride Flow
+
+```
+1. Passenger requests a ride (pickup + drop location)
+        ↓
+2. Nearby available drivers notified in real-time (Socket.io)
+        ↓
+3. Driver accepts the ride request
+        ↓
+4. Passenger sees live driver location on map
+        ↓
+5. Driver arrives & starts the ride
+        ↓
+6. Ride completes at destination
+        ↓
+7. Payment is recorded
+        ↓
+8. Passenger submits rating & review
+```
+
+---
+
+## 🗄️ Database Schema (Collections)
+
+| Collection | Purpose |
+|---|---|
+| **Users** | Passenger account details |
+| **Drivers** | Driver profile, license, approval status |
+| **Vehicles** | Vehicle info linked to a driver |
+| **Rides** | Ride requests, status, route, fare |
+| **Payments** | Transaction records per ride |
+| **Reviews** | Ratings & feedback between passengers/drivers |
+| **Notifications** | FCM push notification logs |
+
+---
+
+## 🔌 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/refresh-token
+```
+
+### Users
+```
+GET    /api/users/profile
+PUT    /api/users/profile
+GET    /api/users/ride-history
+```
+
+### Drivers
+```
+POST   /api/drivers/register
+PUT    /api/drivers/status          # online/offline
+POST   /api/drivers/vehicle
+GET    /api/drivers/earnings
+```
+
+### Rides
+```
+POST   /api/rides/request
+PUT    /api/rides/:id/accept
+PUT    /api/rides/:id/reject
+PUT    /api/rides/:id/start
+PUT    /api/rides/:id/complete
+PUT    /api/rides/:id/cancel
+GET    /api/rides/:id/track
+```
+
+### Payments
+```
+POST   /api/payments/process
+GET    /api/payments/history
+```
+
+### Reviews
+```
+POST   /api/reviews
+GET    /api/reviews/:userId
+```
+
+### Admin
+```
+GET    /api/admin/dashboard
+GET    /api/admin/users
+PUT    /api/admin/users/:id/block
+GET    /api/admin/drivers/pending
+PUT    /api/admin/drivers/:id/approve
+GET    /api/admin/revenue
+```
+
+---
+
+## 📁 Project Structure
+
+```
+thuva-waves/
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   ├── pages/            # Home, Login, Dashboards, etc.
+│   │   ├── hooks/            # Custom React hooks
+│   │   ├── services/         # Axios API calls
+│   │   ├── context/          # Auth & global state
+│   │   └── utils/
+│   ├── .env
+│   └── package.json
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/                # Mongoose schemas
+│   ├── routes/
+│   ├── middleware/            # Auth, error handling, validation
+│   ├── services/
+│   ├── sockets/               # Socket.io handlers
+│   ├── config/                # DB, Cloudinary, Firebase config
+│   ├── .env
+│   └── server.js
+│
+└── README.md
+```
+
+### Frontend Pages
+- Home
+- Login / Register
+- Passenger Dashboard
+- Driver Dashboard
+- Admin Dashboard
+- Ride Booking
+- Ride Tracking
+- Profile
+- Ride History
+- Earnings
+- Analytics
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (local or Atlas)
+- Google Maps API key
+- Cloudinary account
+- Firebase project (for FCM)
+
+### Backend Setup
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in **backend/**:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+FIREBASE_SERVER_KEY=your_firebase_key
+```
+
+Create a `.env` file in **frontend/**:
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_key
+```
+
+> ⚠️ Never commit `.env` files to GitHub. Add them to `.gitignore`.
+
+---
+
+## 🔒 Security
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- Role-based authorization (Passenger / Driver / Admin)
+- Input validation on all endpoints
+- Centralized error handling middleware
+
+---
+
+## 🤝 Contributing
+
+This is a personal learning project built as part of full-stack development practice. Suggestions and feedback are welcome via Issues or Pull Requests.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Built by [thuvan2004](https://github.com/thuvan2004)**
